@@ -12,11 +12,11 @@ resource "aws_s3_bucket" "terraform_state" {
     ManagedBy = "Terraform"
   }
 
-#checkov:skip=CKV2_AWS_62:No event consumer is planned for the Terraform state bucket
-#checkov:skip=CKV_AWS_18: Revisit for a longer-lived setup, but for now this is a temporary bucket for the Terraform state
-#checkov:skip=CKV2_AWS_61: retaining state versions rather than setting up an expiry during the project
-#checkov:skip=CKV_AWS_144: no second region is planned
-#checkov:skip=CKV_AWS_145: the bucket already has SSE-S3 encryption; not using KMS keys for now
+  #checkov:skip=CKV2_AWS_62:No event consumer is planned for the Terraform state bucket
+  #checkov:skip=CKV_AWS_18: Revisit for a longer-lived setup, but for now this is a temporary bucket for the Terraform state
+  #checkov:skip=CKV2_AWS_61: retaining state versions rather than setting up an expiry during the project
+  #checkov:skip=CKV_AWS_144: no second region is planned
+  #checkov:skip=CKV_AWS_145: the bucket already has SSE-S3 encryption; not using KMS keys for now
 }
 
 resource "aws_s3_bucket_versioning" "terraform_state" {
