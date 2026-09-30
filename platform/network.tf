@@ -134,3 +134,4 @@ resource "aws_eip" "nat" {
     ManagedBy = "Terraform"
   }
 }
+
