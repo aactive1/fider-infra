@@ -4,10 +4,11 @@ resource "aws_vpc" "main" {
     Name      = "fider-vpc"
     Project   = "fider-eks"
     ManagedBy = "Terraform"
-
-    enable_dns_support   = "true"
-    enable_dns_hostnames = "true"
   }
+  enable_dns_support   = true
+  enable_dns_hostnames = true
+
+  #checkov:skip=CKV2_AWS_11:VPC Flow Logs deferred to the monitoring phase
 }
 
 resource "aws_subnet" "public_a" {
@@ -135,3 +136,6 @@ resource "aws_eip" "nat" {
   }
 }
 
+resource "aws_default_security_group" "default" {
+  vpc_id = aws_vpc.main.id
+}
