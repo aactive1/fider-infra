@@ -18,7 +18,7 @@ resource "aws_iam_role" "github_ecr" {
       "Condition": {
         "StringEquals": {
           "token.actions.githubusercontent.com:aud": "sts.amazonaws.com",
-          "token.actions.githubusercontent.com:sub": "repo:aaden04/fider-app:ref:refs/heads/main"
+          "token.actions.githubusercontent.com:sub": "repo:aaden04@181752628/fider-app@1369145186:ref:refs/heads/main"
         }
       }
     }
