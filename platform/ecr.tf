@@ -6,6 +6,11 @@ resource "aws_ecr_repository" "fider" {
     Project   = "fider-eks"
     ManagedBy = "Terraform"
   }
+  image_scanning_configuration {
+    scan_on_push = true
+  }
+
+  #checkov:skip=CKV_AWS_136:Using default AES-256 encryption for this learning project; KMS key management is outside the current scope
 
 }
 
