@@ -119,3 +119,34 @@ resource "aws_iam_role_policy_attachment" "eks_nodegroup_ecr" {
   role       = aws_iam_role.eks_nodegroup.name
   policy_arn = "arn:aws:iam::aws:policy/AmazonEC2ContainerRegistryPullOnly"
 }
+
+resource "aws_iam_role_policy_attachment" "vpc_cni" {
+  role       = aws_iam_role.vpc_cni.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonEKS_CNI_Policy"
+}
+
+resource "aws_iam_role" "vpc_cni" {
+  name = "fider-vpc-cni"
+  tags = {
+    Name      = "fider-vpc-cni"
+    Project   = "fider-eks"
+    ManagedBy = "Terraform"
+  }
+  assume_role_policy = <<EOF
+  {
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "pods.eks.amazonaws.com"
+      },
+      "Action": [
+        "sts:AssumeRole",
+        "sts:TagSession"
+      ]
+    }
+  ]
+}
+EOF
+}
