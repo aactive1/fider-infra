@@ -16,7 +16,17 @@ resource "aws_eks_cluster" "main" {
     ManagedBy = "Terraform"
   }
 
+  enabled_cluster_log_types = [
+    "api",
+    "audit",
+    "authenticator",
+    "controllerManager",
+    "scheduler"
+  ]
+
+
   depends_on = [aws_iam_role_policy_attachment.eks_cluster]
+  #checkov:skip=CKV_AWS_58:EKS 1.28+ provides default encryption with an AWS-owned KMS key
 }
 
 resource "aws_eks_node_group" "main" {
