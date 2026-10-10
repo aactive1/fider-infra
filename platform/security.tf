@@ -54,8 +54,8 @@ resource "aws_security_group" "rds-sg" {
 
 resource "aws_vpc_security_group_ingress_rule" "rds_sg_ingress" {
   security_group_id            = aws_security_group.rds-sg.id
-  description                  = "Allow traffic from the Fider application security group"
-  referenced_security_group_id = aws_security_group.fider-sg.id
+  description                  = "Allow traffic from the eks worker nodes"
+  referenced_security_group_id = aws_eks_cluster.main.vpc_config[0].cluster_security_group_id
   ip_protocol                  = "tcp"
   from_port                    = 5432
   to_port                      = 5432

@@ -21,7 +21,7 @@ resource "aws_db_instance" "fider_rds_instance" {
   manage_master_user_password = true
   storage_encrypted           = true
   vpc_security_group_ids      = [aws_security_group.rds-sg.id]
-  backup_retention_period     = 7
+  backup_retention_period     = 1
   skip_final_snapshot         = true
   delete_automated_backups    = true
   deletion_protection         = false
