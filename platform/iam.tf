@@ -150,3 +150,55 @@ resource "aws_iam_role" "vpc_cni" {
 }
 EOF
 }
+
+resource "aws_iam_policy" "eso_secrets_policy" {
+  name = "fider-eso-secrets-policy"
+
+  policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Action": [
+        "secretsmanager:GetSecretValue"
+      ],
+      "Resource": "${aws_db_instance.fider_rds_instance.master_user_secret[0].secret_arn}"
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role" "fider_eso" {
+  name = "fider-eso-role"
+
+  tags = {
+    Name      = "fider-eso-role"
+    Project   = "fider-eks"
+    ManagedBy = "Terraform"
+  }
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "pods.eks.amazonaws.com"
+      },
+      "Action": [
+        "sts:AssumeRole",
+        "sts:TagSession"
+      ]
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "fider_eso" {
+  role       = aws_iam_role.fider_eso.name
+  policy_arn = aws_iam_policy.eso_secrets_policy.arn
+}
