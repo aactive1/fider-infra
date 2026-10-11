@@ -73,3 +73,10 @@ resource "aws_eks_addon" "vpc_cni" {
   addon_name                  = "vpc-cni"
   resolve_conflicts_on_create = "OVERWRITE"
 }
+
+resource "aws_eks_pod_identity_association" "eso" {
+  cluster_name    = aws_eks_cluster.main.name
+  namespace       = "external-secrets"
+  service_account = "external-secrets"
+  role_arn        = aws_iam_role.fider_eso.arn
+}
