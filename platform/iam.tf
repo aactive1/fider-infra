@@ -163,7 +163,10 @@ resource "aws_iam_policy" "eso_secrets_policy" {
       "Action": [
         "secretsmanager:GetSecretValue"
       ],
-      "Resource": "${aws_db_instance.fider_rds_instance.master_user_secret[0].secret_arn}"
+      "Resource": [
+        "${aws_db_instance.fider_rds_instance.master_user_secret[0].secret_arn}",
+        "arn:aws:secretsmanager:us-east-1:796951668371:secret:fider/dev/jwt-zhQ88L"
+      ]
     }
   ]
 }
