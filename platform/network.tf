@@ -16,9 +16,10 @@ resource "aws_subnet" "public_a" {
   cidr_block        = "10.0.1.0/24"
   availability_zone = "us-east-1a"
   tags = {
-    Name      = "fider-public-subnet-a"
-    Project   = "fider-eks"
-    ManagedBy = "Terraform"
+    Name                     = "fider-public-subnet-a"
+    Project                  = "fider-eks"
+    ManagedBy                = "Terraform"
+    "kubernetes.io/role/elb" = "1"
   }
 }
 
@@ -27,9 +28,10 @@ resource "aws_subnet" "public_b" {
   cidr_block        = "10.0.2.0/24"
   availability_zone = "us-east-1b"
   tags = {
-    Name      = "fider-public-subnet-b"
-    Project   = "fider-eks"
-    ManagedBy = "Terraform"
+    Name                     = "fider-public-subnet-b"
+    Project                  = "fider-eks"
+    ManagedBy                = "Terraform"
+    "kubernetes.io/role/elb" = "1"
   }
 }
 
