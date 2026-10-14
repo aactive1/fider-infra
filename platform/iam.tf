@@ -205,3 +205,34 @@ resource "aws_iam_role_policy_attachment" "fider_eso" {
   role       = aws_iam_role.fider_eso.name
   policy_arn = aws_iam_policy.eso_secrets_policy.arn
 }
+
+resource "aws_iam_policy" "alb_controller_policy" {
+  policy = file("alb-controller-policy.json")
+}
+
+resource "aws_iam_role" "alb_controller_role" {
+  name = "fider-alb-controller-role"
+
+  assume_role_policy = <<EOF
+{
+  "Version": "2012-10-17",
+  "Statement": [
+    {
+      "Effect": "Allow",
+      "Principal": {
+        "Service": "pods.eks.amazonaws.com"
+      },
+      "Action": [
+        "sts:AssumeRole",
+        "sts:TagSession"
+      ]
+    }
+  ]
+}
+EOF
+}
+
+resource "aws_iam_role_policy_attachment" "alb_controller" {
+  role       = aws_iam_role.alb_controller_role.name
+  policy_arn = aws_iam_policy.alb_controller_policy.arn
+}
