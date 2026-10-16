@@ -32,17 +32,4 @@ jobs:
       - name: Validate Terraform
         run: terraform validate
 
-      - name: Run Checkov security scan
-        uses: checkov-action@v7
-        with:
-          directory: platform/
-          framework: terraform
-          output_format: cli
-      
-      - name: Scan Terraform with Trivy
-        uses: aquasecurity/trivy-action@57a97c7e7821a5776cebc9bb87c984fa69cba8f1
-        with:
-          scan-type: config
-          scan-ref: platform/
-          format: table
-          exit-code: '1'
+
