@@ -149,9 +149,33 @@ An ACM certificate and a domain are also required for the HTTPS ingress setup.
 
 ## 8. Destroy Infrastructure
 
-When the AWS resources are no longer needed, they can be removed using Terraform.
+Before destroying the AWS infrastructure, remove the Kubernetes resources that manage AWS load balancers.
 
-First remove application-level Kubernetes resources that create AWS load balancers and other external dependencies.
+**Important:** The EKS cluster and AWS Load Balancer Controller must still be running during this step.
+
+### Step 1 — Remove Argo CD applications
+
+This prevents Argo CD from recreating deleted Kubernetes resources.
+
+```bash
+kubectl delete application fider-dev -n argocd
+kubectl delete application fider-test -n argocd
+kubectl delete application fider-prod -n argocd
+```
+
+### Step 2 — Remove Kubernetes Ingress resources
+
+```bash
+kubectl delete ingress --all -n dev
+kubectl delete ingress --all -n test
+kubectl delete ingress --all -n prod
+```
+
+The AWS Load Balancer Controller will clean up the associated Application Load Balancers.
+
+**Allow the ALBs to finish deleting before continuing.** Check the EC2 Load Balancers page in the AWS Console and confirm the Fider ALBs have disappeared.
+
+### Step 3 — Destroy Terraform infrastructure
 
 From the `platform` directory:
 
@@ -161,14 +185,10 @@ terraform destroy
 
 Review the deletion plan before confirming.
 
-**Important:** Do not destroy the bootstrap state infrastructure while Terraform still depends on it. Keep the S3 state bucket until the platform has been fully removed and its state has been safely handled.
+### Important notes
 
-Some resources, such as versioned S3 buckets, may require additional cleanup before deletion.
-
-## Notes
-
-- Terraform state is stored remotely in S3.
-- Bootstrap and platform use separate state files.
-- AWS infrastructure should be deployed before the Kubernetes components.
-- Recreating infrastructure may change RDS endpoints, secret ARNs, load balancer addresses and other resource identifiers.
-- Do not commit credentials or sensitive Terraform values to Git.
+- Do not destroy EKS before removing the ALBs.
+- ALB network interfaces can prevent public subnets from being deleted.
+- Do not manually delete ALB-managed network interfaces.
+- Keep the Terraform bootstrap S3 state bucket until the platform has been destroyed.
+- If EKS has already been deleted, remaining ALBs must be removed through AWS before Terraform can complete the network cleanup.
